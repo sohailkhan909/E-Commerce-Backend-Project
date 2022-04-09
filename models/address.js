@@ -7,7 +7,7 @@ const modelSchema = new mongoose.Schema({
     pincode:{
         type:Number
     },
-    Address: {
+    Address:{
         type:String
     },
     isPermanant: Boolean,
