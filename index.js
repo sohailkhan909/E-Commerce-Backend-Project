@@ -2,83 +2,33 @@ const express =require ("express"); // express require
 
 const db = require("../E-Commerce-Backend-Project/Database/db"); //database add
 
-const addSchema = require("../E-Commerce-Backend-Project/models/address")//address Schema
-
 const sellerSchema = require("../E-Commerce-Backend-Project/models/seller.schema") //seller Schema
 
-const CatSchema = require("../E-Commerce-Backend-Project/models/Categories") //categories schema
 const app = express(); // express call
+
 app.use(express.json());//middleware js to json /json to js
 
+const Address_route = require("../E-Commerce-Backend-Project/routes/address.route"); //Address route
+const Categories_routes = require("../E-Commerce-Backend-Project/routes/categories.routes"); //categroies route
 
 //address APi
-//insert address
-app.post("/address", (req, res)=>{
-    let addCity = req.body.city;
-    let addPin = req.body.pincode;
-    let address = req.body.Address;
-    let isPer = req.body.isPermanant;
-    let alladd = new addSchema({city:addCity, pincode:addPin, Address:address, isPermanant:isPer})
-    console.log(alladd);
-    alladd.save((err, result)=>{
-        if (err) {
-            return res.status(401).json({msg:"Not insert Address", errr:err})
-        } else {
-            return res.status(200).json({msg:"Address inserted Successfully", reslt:result})
-        }
-    })
-})
 
-//show all address
-app.get("/showAllAddress", (req, res)=>{
-    addSchema.find((err, result)=>{
-        if (err) {
-            return res.status(404).json({msg:"Data Not Found", error:err})
-        } else {
-            return res.status(302).json({msg:"All Address Found", result:result})
-        }
-    })
-})
+app.use("/addresspath1", Address_route);//insert address
 
-app.get("/addressFind/:id", (req, res)=>{
-    let addId= req.params.id
-    addSchema.findById({_id:addId}, (err, result)=>{
-        if (err) {
-            return res.status(404).json({msg:"Not Found", error:err})
-        } else {
-            return res.status(200).json({msg:"Id Find Successfully", result:result})
-        }
-    })
-})
-// Update by Id
-app.put("/UpdatedById/:id",(req,res)=>{
-    let addId = req.params.id;
-    let updateCity = req.body.city;
-    let updatePin = req.body.pincode;
-    let updateAddress = req.body.Address;
-    let updateData = {id:addId, city:updateCity, pincode:updatePin, Address:updateAddress}
-    console.log(updateData);
-    addSchema.findOneAndUpdate({_id:addId}, updateData, (err,result)=>{
-        if(err){
-            return res.status(304).json({msg:"Not Modify",error:err})
-        }else{
-            return res.status(200).json({msg:"address Update successfully",result:result})
-        }
-    })
-})
+app.use("/showAllAddress",Address_route);//show all address
 
-app.delete("/delete/:id", (req, res)=>{
-    let addId = req.params.id;
-    addSchema.findByIdAndDelete({_id:addId}, (err, result)=>{
-        if (err) {
-            return res.status(400).json({msg:"Not Found", err:err})
-        } else {
-            return res.status(200).json({msg:"Delete Address Via Id", result:result})
-        }
-    })
-})
+app.use("/selectedaddresses", Address_route);//show selected id
 
-//seller add api
+app.use("/updateone", Address_route);// Update by Id
+
+app.use("/deleteOne", Address_route);//delete api
+
+
+
+
+
+
+//seller add ap
 app.post("/sellerAdd", (req, res)=>{
     let sellname = req.body.name;
     let sellShop = req.body.shopName;
@@ -154,77 +104,16 @@ app.delete("/delete_seller/:id", (req, res)=>{
 
 //categories apis
 
-//insert cat
-app.post("/catInsert" ,(req, res)=>{
-    let catname = req.body.name;
-    let catActive = req.body.Active;
-    let date = req.body.dateCreate;
-    let cate = new CatSchema({name:catname, Active:catActive, dateCreate:date})
-    console.log(cate);
-    cate.save((err, result)=>{
-        if (err) {
-            return res.status(400).json({msg:"Categories Insert Error", error:err})
-        } else {
-            return res.status(201).json({msg:"insert Categories Successfull", result:result})
-        }
-    })
-})
 
-//change cat active status
-app.put("/changeActiveStatus/:id", (req, res)=>{
-    let catId = req.params.id;
-    let activeStatus = req.body.Active;
-    console.log(activeStatus);
-    let change = {Active:activeStatus}
-    CatSchema.findOneAndUpdate({_id:catId}, change,(err, result)=>{
-        if (err) {
-            return res.status(400).json({msg:"not find", err:err})
-        } else {
-            return res.status(200).json({msg:"change active status", result:result})
-        }
-    })
-})
+app.use("/catInsert", Categories_routes);//insert cat
 
-//cat name update
-app.put("/nameUpdate/:id", (req, res)=>{
-    let catId = req.params.id;
-    let changeName = req.body.name;
-    let change = {name:changeName}
-    CatSchema.findOneAndUpdate({_id:catId}, change,(err, result)=>{
-        if (err) {
-            return res.status(400).json({msg:"not find", err:err})
-        } else {
-            return res.status(200).json({msg:"Update Name", result:result})
-        }
-    })
-})
+app.use("/changeStatus", Categories_routes);//change cat active status
 
+app.use("/name_update", Categories_routes);//cat name update
 
-//cat get detail by id
-app.get("/Cat_find/:id", (req, res)=>{
-    let catId= req.params.id
-    CatSchema.findById({_id:catId}, (err, result)=>{
-        if (err) {
-            return res.status(404).json({msg:"Not Found", error:err})
-        } else {
-            return res.status(200).json({msg:"Cateries alvailble", result:result})
-        }
-    })
-})
+app.use("/findname", Categories_routes);//cat get detail by id
 
-
-
-//cat delete by id
-app.delete("/delete_cat/:id", (req, res)=>{
-    let catId = req.params.id;
-    CatSchema.findByIdAndDelete({_id:catId}, (err, result)=>{
-        if (err) {
-            return res.status(400).json({msg:"Not Found", err:err})
-        } else {
-            return res.status(200).json({msg:"Delete Categories Via Id", result:result})
-        }
-    })
-})
+app.use("/deletecat", Categories_routes )//cat delete by id
 
 
 
