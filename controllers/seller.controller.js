@@ -1,12 +1,13 @@
 const sellerSchema = require ("../models/seller.schema"); // seller Schema
 
 const addSeller = (req, res)=>{
+    let addId = req.body.addressId; //address collection id via seller schema 
     let sellname = req.body.name;
     let sellShop = req.body.shopName;
     let sellnum = req.body.number;
     let sellemail = req.body.email;
     let sellpass = req.body.password;
-    let sellerAll = new sellerSchema({name:sellname, shopName:sellShop, number:sellnum, email:sellemail, password:sellpass})
+    let sellerAll = new sellerSchema({addressId:addId, name:sellname, shopName:sellShop, number:sellnum, email:sellemail, password:sellpass})
     console.log(sellerAll);
     sellerAll.save((err, result)=>{
         if (err) {
@@ -24,7 +25,7 @@ const allSeller = (req, res)=>{
         } else {
             return res.status(302).json({msg:"All Seller Names Find", result:result})
         }
-    })
+    }).populate("addressId")
 }
 
 const selectedSeller = (req, res)=>{
@@ -35,7 +36,7 @@ const selectedSeller = (req, res)=>{
         } else {
             return res.status(200).json({msg:"seller Available", result:result})
         }
-    })
+    }).populate("addressId")
 }
 
 const updateAll = (req,res)=>{

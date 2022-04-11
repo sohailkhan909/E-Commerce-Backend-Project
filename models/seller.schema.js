@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const modelSchema = new mongoose.Schema({
+    addressId :{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Address"
+    },
     name:{
         type : String,
         required:true
