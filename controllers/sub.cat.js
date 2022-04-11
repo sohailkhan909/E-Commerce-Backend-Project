@@ -1,10 +1,11 @@
 const SubCatSchema = require("../models/sub.cat");
 
 const addSubcat = (req, res)=>{
+    let catId = req.body.catId
     let subcatname = req.body.name;
     let subcatActive = req.body.Active;
     let subdate = req.body.dateCreate;
-    let subcate = new SubCatSchema({name:subcatname, Active:subcatActive, dateCreate:subdate})
+    let subcate = new SubCatSchema({catId:catId, name:subcatname, Active:subcatActive, dateCreate:subdate})
     console.log(subcate);
     subcate.save((err, result)=>{
         if (err) {
@@ -51,7 +52,7 @@ const findOne = (req, res)=>{
         } else {
             return res.status(200).json({msg:"find sub categories", result:result})
         }
-    })
+    }).populate("catId")//populate method joins categories Id
 }
 
 const deleteOne = (req, res)=>{
