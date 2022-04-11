@@ -6,7 +6,7 @@ const addSeller = (req, res)=>{
     let sellnum = req.body.number;
     let sellemail = req.body.email;
     let sellpass = req.body.password;
-    let sellerAll = new sellerSchema({name:sellname, shopName:sellShop, number:sellname, email:sellemail, password:sellpass})
+    let sellerAll = new sellerSchema({name:sellname, shopName:sellShop, number:sellnum, email:sellemail, password:sellpass})
     console.log(sellerAll);
     sellerAll.save((err, result)=>{
         if (err) {

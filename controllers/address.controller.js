@@ -1,11 +1,15 @@
 const addSchema = require("../models/address") //schema 
 
 const addInsert = (req, res)=>{
+    let addsellerId = req.body.sellerId
     let addCity = req.body.city;
     let addPin = req.body.pincode;
     let address = req.body.Address;
+    let addstate = req.body.state;
+    let addcountry = req.body.country;
+    let countrycode = req.body.countrycode;
     let isPer = req.body.isPermanant;
-    let alladd = new addSchema({city:addCity, pincode:addPin, Address:address, isPermanant:isPer})
+    let alladd = new addSchema({sellerId:addsellerId, city:addCity, pincode:addPin, Address:address, state:addstate, country:addcountry, countrycode:countrycode, isPermanant:isPer})
     console.log(alladd);
     alladd.save((err, result)=>{
         if (err) {
@@ -24,7 +28,7 @@ const AddallList = (req, res)=>{
         } else {
             return res.status(302).json({msg:"All Address Found", result:result})
         }
-    })
+    }).populate("sellerId")
 } 
 
 const selectedAddress = (req, res)=>{
@@ -35,7 +39,7 @@ const selectedAddress = (req, res)=>{
         } else {
             return res.status(200).json({msg:"Id Find Successfully", result:result})
         }
-    })
+    }).populate("sellerId")
 }
 
 const updateOne = (req,res)=>{
@@ -43,7 +47,10 @@ const updateOne = (req,res)=>{
     let updateCity = req.body.city;
     let updatePin = req.body.pincode;
     let updateAddress = req.body.Address;
-    let updateData = {id:addId, city:updateCity, pincode:updatePin, Address:updateAddress}
+    let updatestate = req.body.state;
+    let updatecountry = req.body.country;
+    let code = req.body.countrycode
+    let updateData = {id:addId, city:updateCity, pincode:updatePin, Address:updateAddress,state:updatestate,country:updatecountry, countrycode:code}
     console.log(updateData);
     addSchema.findOneAndUpdate({_id:addId}, updateData, (err,result)=>{
         if(err){
